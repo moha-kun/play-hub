@@ -1,0 +1,17 @@
+<div class="container py-5">
+  <h1 class="text-center mb-5">🎮 Welcome to PlayHub</h1>
+
+  <div class="row g-4">
+    @for (game of games; track game.id) {
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100" (click)="openGame(game)" style="cursor: pointer;">
+        <img [src]="game.image" class="card-img-top" alt="{{ game.name }}">
+        <div class="card-body text-center">
+          <h5 class="card-title">{{ game.name }}</h5>
+          <p class="card-text text-muted">{{ game.description }}</p>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>
