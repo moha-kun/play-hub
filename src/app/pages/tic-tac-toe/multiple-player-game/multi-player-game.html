@@ -1,0 +1,17 @@
+<div class="container">
+  <h2>Multiple Player Game</h2>
+
+  <div class="board">
+    @for (cell of board; track $index; let i = $index) {
+      <div (click)="multiMove(i)" class="cell">
+        {{ cell }}
+      </div>
+    }
+  </div>
+
+  <div class="mt-3">
+    @if (winner) {
+      <p>{{ winner === 'draw' ? 'Draw' : (winner + ' wins!') }}</p>
+    }
+  </div>
+</div>

@@ -1,20 +1,26 @@
-<div class="container text-center py-5">
-  <h2 class="mb-4">Tic Tac Toe</h2>
+<div class="container">
+  <h2>Tic Tac Toe</h2>
 
-  <div class="board mx-auto">
-    @for (cell of board; track $index; let i = $index) {
-    <div
-      class="cell"
-      (click)="makeMove(i)">
-      {{ cell }}
+  <div class="mb-3">
+    <button class="btn btn-outline-primary me-2" (click)="startSingle()">Single Player (vs AI)</button>
+    <button class="btn btn-outline-success me-2" (click)="startMultiCreate()">Create 2-player room</button>
+    <div class="d-inline-block ms-2">
+      <input #joinId placeholder="game id" />
+      <button class="btn btn-outline-secondary" (click)="startMultiJoin(joinId.value)">Join Room</button>
     </div>
+  </div>
+
+  <div class="board">
+    @for (cell of board; track $index; let i = $index) {
+      <div (click)="mode === 'single' ? singleMove(i) : multiMove(i)" class="cell">
+        {{ cell }}
+      </div>
     }
   </div>
 
-  <div class="mt-4">
+  <div class="mt-3">
     @if (winner) {
-      <p>{{ winner === 'draw' ? 'It\'s a draw!' : winner + ' wins!' }}</p>
+      <p>{{ winner === 'draw' ? 'Draw' : (winner + ' wins!') }}</p>
     }
-    <button class="btn btn-primary" (click)="resetGame()">Restart</button>
   </div>
 </div>

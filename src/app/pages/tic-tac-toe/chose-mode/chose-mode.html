@@ -1,0 +1,7 @@
+<div class="menu-container">
+  <h2>Tic Tac Toe</h2>
+  <button class="menu-button btn btn-outline-primary" (click)="startSingle()">Single Player (vs AI)</button>
+  <button class="menu-button btn btn-outline-success" (click)="startMultiCreate()">Create 2-player room</button>
+  <input class="menu-button form-control" #joinId placeholder="game id"/>
+  <button class="menu-button btn btn-outline-secondary" (click)="startMultiJoin(joinId.value)">Join Room</button>
+</div>

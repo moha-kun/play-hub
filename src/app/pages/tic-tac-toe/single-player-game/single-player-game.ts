@@ -1,19 +1,16 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component } from '@angular/core';
 import {Subscription} from 'rxjs';
-import {SocketService} from './services/socket.service';
-import {SinglePlayerService} from './services/single-player-service';
-import {Winner} from './services/tic-tac-toe-service';
-
-type Player = 'X' | 'O' | '';
+import {Player, Winner} from '../services/tic-tac-toe-service';
+import {SinglePlayerService} from '../services/single-player-service';
+import {SocketService} from '../services/socket.service';
 
 @Component({
-  selector: 'app-tic-tac-toe',
+  selector: 'app-single-player-game',
   imports: [],
-  templateUrl: './tic-tac-toe.html',
-  styleUrl: './tic-tac-toe.scss',
-  standalone: true
+  templateUrl: './single-player-game.html',
+  styleUrl: './single-player-game.scss',
 })
-export class TicTacToe implements OnInit, OnDestroy {
+export class SinglePlayerGame {
   board: Player[] = Array(9).fill('');
   gameId: string | null = null;
   winner: Winner | null = null;

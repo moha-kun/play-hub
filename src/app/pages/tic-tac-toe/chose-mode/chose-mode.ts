@@ -1,19 +1,17 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {SocketService} from './services/socket.service';
-import {SinglePlayerService} from './services/single-player-service';
-import {Winner} from './services/tic-tac-toe-service';
-
-type Player = 'X' | 'O' | '';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Player, Winner} from '../services/tic-tac-toe-service';
+import {SinglePlayerService} from '../services/single-player-service';
+import {SocketService} from '../services/socket.service';
 
 @Component({
-  selector: 'app-tic-tac-toe',
+  selector: 'app-chose-mode',
   imports: [],
-  templateUrl: './tic-tac-toe.html',
-  styleUrl: './tic-tac-toe.scss',
-  standalone: true
+  templateUrl: './chose-mode.html',
+  styleUrl: './chose-mode.scss',
 })
-export class TicTacToe implements OnInit, OnDestroy {
+export class ChoseMode {
   board: Player[] = Array(9).fill('');
   gameId: string | null = null;
   winner: Winner | null = null;
@@ -25,7 +23,7 @@ export class TicTacToe implements OnInit, OnDestroy {
   mySymbol: Player = '';
   isMyTurn = false;
 
-  constructor(private singlePlayerService: SinglePlayerService, private socketService: SocketService) {
+  constructor(private singlePlayerService: SinglePlayerService, private socketService: SocketService, private router: Router, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -40,17 +38,7 @@ export class TicTacToe implements OnInit, OnDestroy {
 
   // ---------------- Single player (HTTP) ----------------
   startSingle() {
-    if (this.socketSubStart) {
-      this.socketSubStart.unsubscribe();
-    }
-    if (this.socketSubState) {
-      this.socketSubState?.unsubscribe();
-    }
-    this.socketService.disconnect();
-    this.mode = 'single';
-    this.board = Array(9).fill('') as Player[];
-    this.gameId = Date.now().toString();
-    this.winner = null;
+    this.router.navigate(['single-player'], {relativeTo: this.route});
   }
 
   singleMove(i: number) {
@@ -63,21 +51,8 @@ export class TicTacToe implements OnInit, OnDestroy {
   }
 
   // ---------------- Multiplayer (WebSocket) ----------------
-  async startMultiCreate() {
-    this.mode = 'multi';
-    this.socketService.connect();
-    const resp: any = await this.socketService.createRoom();
-    if (resp.error) {
-      alert(resp.error);
-      return;
-    }
-    this.gameId = resp.gameId;
-    this.mySymbol = 'X';
-    this.isMyTurn = true; // creator is X & starts
-
-    // subscribe to events
-    this.subscribeSocketEvents();
-    alert(`Room created. Share game id: ${this.gameId} so opponent can join.`);
+  startMultiCreate() {
+    this.router.navigate(['multi-player'], {relativeTo: this.route});
   }
 
   async startMultiJoin(gameId: string) {
