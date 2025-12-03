@@ -8,27 +8,3 @@
   gap: 1rem;
   padding: 1rem;
 }
-
-.board {
-  display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-gap: 8px;
-  justify-content: center;
-}
-
-.cell {
-  width: 100px;
-  height: 100px;
-  background: #f8f9fa;
-  border: 2px solid #ccc;
-  font-size: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: background 0.3s;
-
-  &:hover {
-    background: #e9ecef;
-  }
-}

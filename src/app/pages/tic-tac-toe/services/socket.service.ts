@@ -18,7 +18,7 @@ export class SocketService {
     }
 
     // create a room (returns gameId via callback)
-    createRoom(): Promise<{ gameId: string } | { error: string }> {
+    createRoom(): Promise<{ gameId: string }> {
         return new Promise((resolve) => {
             this.socket?.emit('createRoom', (resp: any) => resolve(resp));
         });
@@ -32,8 +32,14 @@ export class SocketService {
 
     // Send a player move
     sendMove(gameId: string, index: number): Promise<any> {
+      if (!this.socket || !this.socket.connected) {
+        this.connect();
+      }
         return new Promise((resolve) => {
-            this.socket?.emit('playerMove', { gameId, index }, (resp: any) => resolve(resp));
+            this.socket?.emit('playerMove', { gameId, index }, (resp: any) => {
+              console.log('make move resolved');
+              resolve(resp);
+            });
         });
     }
 

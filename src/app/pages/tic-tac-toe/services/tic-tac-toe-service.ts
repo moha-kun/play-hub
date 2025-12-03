@@ -1,11 +1,11 @@
-export type Player = 'X' | 'O' | '';
-export type Winner = Player | 'draw' | null;
+export type PlayerSymbol = 'X' | 'O' | '';
+export type Winner = PlayerSymbol | 'draw' | null;
 
 export interface GameState {
-  board: Player[];
+  board: PlayerSymbol[];
   winner: Winner;
 }
 
 export interface TicTacToeService {
-  makeMove(board: Player[], index: number): GameState | null;
+  makeMove(board: PlayerSymbol[], index: number): GameState | null;
 }

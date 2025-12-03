@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import http from 'http';
-import { Server as IOServer, Socket } from 'socket.io';
+import {Server as IOServer, Socket} from 'socket.io';
 
 const app = express();
 app.use(cors());
@@ -9,7 +9,7 @@ app.use(express.json());
 
 const server = http.createServer(app);
 const io = new IOServer(server, {
-  cors: { origin: '*' }
+  cors: {origin: '*'}
 });
 
 // ---- Types ----
@@ -56,21 +56,21 @@ io.on('connection', (socket: Socket) => {
 
     socket.join(roomName);
     // inform creator
-    callback({ gameId });
+    callback({gameId});
     console.log(`Room ${roomName} created by ${socket.id}`);
   });
 
   socket.on('joinRoom', (data: { gameId: string }, callback: (resp: any) => void) => {
-    const { gameId } = data;
+    const {gameId} = data;
     const roomName = `room-${gameId}`;
     const game = games[gameId];
     if (!game) {
-      callback({ error: 'Game not found' });
+      callback({error: 'Game not found'});
       return;
     }
     // if room already has O player, cannot join
     if (game.players.O) {
-      callback({ error: 'Room already full' });
+      callback({error: 'Room already full'});
       return;
     }
 
@@ -84,40 +84,40 @@ io.on('connection', (socket: Socket) => {
       state: sanitizeGameForClient(game)
     });
 
-    callback({ success: true });
+    callback({success: true});
     console.log(`Socket ${socket.id} joined ${roomName}`);
   });
 
   socket.on('playerMove', (data: { gameId: string; index: number }, callback: (resp: any) => void) => {
-    const { gameId, index } = data;
+    const {gameId, index} = data;
     const game = games[gameId];
     if (!game) {
-      callback({ error: 'Invalid game' });
+      callback({error: 'Invalid game'});
       return;
     }
     if (game.winner) {
-      callback({ error: 'Game already finished' });
+      callback({error: 'Game already finished'});
       return;
     }
     // Determine which player this socket is
     const playerSymbol = game.players.X === socket.id ? 'X' : game.players.O === socket.id ? 'O' : null;
     if (!playerSymbol) {
-      callback({ error: 'You are not a player in this game' });
+      callback({error: 'You are not a player in this game'});
       return;
     }
     // Not their turn?
     if (game.turn !== playerSymbol) {
-      callback({ error: "Not your turn" });
+      callback({error: "Not your turn"});
       return;
     }
     // Invalid index
     if (index < 0 || index > 8) {
-      callback({ error: 'Invalid index' });
+      callback({error: 'Invalid index'});
       return;
     }
     // Cell occupied?
     if (game.board[index]) {
-      callback({ error: 'Cell already taken' });
+      callback({error: 'Cell already taken'});
       return;
     }
 
@@ -142,7 +142,7 @@ io.on('connection', (socket: Socket) => {
       state: sanitizeGameForClient(game)
     });
 
-    callback({ success: true });
+    callback({success: true});
   });
 
   socket.on('leaveRoom', (data: { gameId: string }) => {
@@ -175,21 +175,22 @@ io.on('connection', (socket: Socket) => {
   });
 });
 
-// ---- helper functions for server-side winner/draw check (same logic as REST) ----
+// ---- helper functions for server-side winner/draw check ----
 
 const WIN_COMBOS = [
-  [0,1,2],[3,4,5],[6,7,8],
-  [0,3,6],[1,4,7],[2,5,8],
-  [0,4,8],[2,4,6],
+  [0, 1, 2], [3, 4, 5], [6, 7, 8],
+  [0, 3, 6], [1, 4, 7], [2, 5, 8],
+  [0, 4, 8], [2, 4, 6],
 ];
 
 function checkWinnerServer(board: PlayerSymbol[]): Winner {
-  for (const [a,b,c] of WIN_COMBOS) {
+  for (const [a, b, c] of WIN_COMBOS) {
     // @ts-ignore
     if (board[a] && board[a] === board[b] && board[a] === board[c]) return board[a];
   }
   return null;
 }
+
 function isDrawServer(board: PlayerSymbol[]): boolean {
   return board.every(cell => cell !== '');
 }

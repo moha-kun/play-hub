@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {GameState, Player, TicTacToeService, Winner} from './tic-tac-toe-service';
+import {GameState, PlayerSymbol, TicTacToeService, Winner} from './tic-tac-toe-service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class SinglePlayerService implements TicTacToeService {
   secondPlayer = 'O' as const;
 
 
-  makeMove(board: Player[], index: number): GameState | null {
+  makeMove(board: PlayerSymbol[], index: number): GameState | null {
     if (!board) {
       console.error('Board not initialized');
       return null;
@@ -53,7 +53,7 @@ export class SinglePlayerService implements TicTacToeService {
     return {board, winner};
   }
 
-  checkWinner(board: Player[]): Winner {
+  checkWinner(board: PlayerSymbol[]): Winner {
     for (const [a, b, c] of this.WIN_COMBOS) {
       // @ts-ignore
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
@@ -64,11 +64,11 @@ export class SinglePlayerService implements TicTacToeService {
     return null;
   }
 
-  isDraw(board: Player[]): boolean {
+  isDraw(board: PlayerSymbol[]): boolean {
     return board.every(cell => cell !== '');
   }
 
-  minimax(board: Player[], isMaximizing: boolean): number {
+  minimax(board: PlayerSymbol[], isMaximizing: boolean): number {
     const winner = this.checkWinner(board);
     if (winner === this.secondPlayer) return 10;
     if (winner === this.firstPlayer) return -10;
@@ -97,7 +97,7 @@ export class SinglePlayerService implements TicTacToeService {
     }
   }
 
-  findBestMove(board: Player[]): number | null {
+  findBestMove(board: PlayerSymbol[]): number | null {
     let bestVal = -Infinity;
     let move: number | null = null;
 

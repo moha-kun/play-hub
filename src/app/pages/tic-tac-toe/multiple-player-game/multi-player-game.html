@@ -1,13 +1,7 @@
 <div class="container">
   <h2>Multiple Player Game</h2>
 
-  <div class="board">
-    @for (cell of board; track $index; let i = $index) {
-      <div (click)="multiMove(i)" class="cell">
-        {{ cell }}
-      </div>
-    }
-  </div>
+  <tic-tac-toe-board [board]="board" (onPlay)="multiMove($event)" />
 
   <div class="mt-3">
     @if (winner) {
