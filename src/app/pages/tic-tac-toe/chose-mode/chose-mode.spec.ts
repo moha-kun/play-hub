@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TicTacToe } from './tic-tac-toe';
+import { ChoseMode } from './chose-mode';
 
-describe('TicTacToe', () => {
-  let component: TicTacToe;
-  let fixture: ComponentFixture<TicTacToe>;
+describe('ChoseMode', () => {
+  let component: ChoseMode;
+  let fixture: ComponentFixture<ChoseMode>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TicTacToe]
+      imports: [ChoseMode]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TicTacToe);
+    fixture = TestBed.createComponent(ChoseMode);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

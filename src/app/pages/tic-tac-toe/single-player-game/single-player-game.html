@@ -1,0 +1,11 @@
+<div class="container">
+  <h2>Single Player Game</h2>
+
+  <tic-tac-toe-board [board]="board" (onPlay)="singleMove($event)" />
+
+  <div class="mt-3">
+    @if (winner) {
+      <p>{{ winner === 'draw' ? 'Draw' : (winner + ' wins!') }}</p>
+    }
+  </div>
+</div>

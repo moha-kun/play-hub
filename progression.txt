@@ -1,0 +1,6 @@
+- I'm currently migrating the tic-tac-toe component to two separate ones: single and multi-player
+- single player is done
+- multi-player needs to add the logic of creating a new game, and joining an existing one by passing the game id as a request parameter so use it to to join a game if it exists or create new one otherwise
+- there are now two services socket-service and multiplayer-service but I have not decide which one to use
+- multiplayer-service and single-player-service implement the same interface
+- the idea of using the multiplayer-service is to use the same component for both single and multi-player, but for the moment I'm not sure what is the best practice for that

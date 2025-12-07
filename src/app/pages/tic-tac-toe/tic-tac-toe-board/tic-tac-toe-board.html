@@ -1,0 +1,7 @@
+<div class="board">
+  @for (cell of board; track $index; let i = $index) {
+  <div (click)="handleClick(i)" class="cell">
+  {{ cell }}
+  </div>
+  }
+</div>
