@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {PlayerSymbol, Winner} from '../services/tic-tac-toe-service';
 import {SocketService} from '../services/socket.service';
@@ -11,7 +11,7 @@ import {TicTacToeBoard} from '../tic-tac-toe-board/tic-tac-toe-board';
   templateUrl: './multi-player-game.html',
   styleUrl: './multi-player-game.scss',
 })
-export class MultiPlayerGame implements OnInit {
+export class MultiPlayerGame implements OnInit, OnDestroy {
   board: PlayerSymbol[] = Array(9).fill('');
   gameId: string | null = null;
   winner: Winner | null = null;
