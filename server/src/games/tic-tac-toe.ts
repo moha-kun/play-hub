@@ -11,6 +11,7 @@ export function createEmptyGame(): GameState {
     board: Array(9).fill('') as PlayerSymbol[],
     winner: null,
     turn: 'X',
+    started: false,
     players: {}
   };
 }

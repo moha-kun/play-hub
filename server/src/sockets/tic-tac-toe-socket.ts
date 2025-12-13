@@ -1,6 +1,6 @@
 import {Server, Socket} from "socket.io";
 import type {GameState} from '../types';
-import {checkWinnerServer, createEmptyGame, isDrawServer, sanitizeGameForClient} from '../games';
+import {checkWinnerServer, createEmptyGame, isDrawServer, sanitizeGameForClient} from '../games/index.js';
 
 const games: Record<string, GameState> = {};
 const roomToGame: Record<string, string> = {}; // roomName -> gameId
@@ -42,6 +42,7 @@ export default function ticTacToeSocket(io: Server) {
       // add this socket as O
       game.players.O = socket.id;
       socket.join(roomName);
+      game.started = true;
 
       // Notify both players the game is starting
       io.to(roomName).emit('startGame', {
@@ -58,6 +59,10 @@ export default function ticTacToeSocket(io: Server) {
       const game = games[gameId];
       if (!game) {
         callback({error: 'Invalid game'});
+        return;
+      }
+      if (!game.started) {
+        callback({error: 'Game has not started yet'});
         return;
       }
       if (game.winner) {
