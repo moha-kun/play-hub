@@ -1,19 +1,26 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "module": "es2020",
-    "moduleResolution": "node",
+    /* Base Options: */
     "rootDir": "./src",
     "outDir": "./dist",
-
+    "target": "es2022",
     "esModuleInterop": true,
-    "strict": true,
     "skipLibCheck": true,
-
-    "allowJs": false,
+    "verbatimModuleSyntax": true,
+    "allowJs": true,
     "resolveJsonModule": true,
+    "moduleDetection": "force",
 
-    "noEmitOnError": false
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+
+    /* We are not transpiling with TypeScript: */
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "noEmit": true,
+
+    /* Our code doesn't run in the DOM: */
+    "lib": ["es2022"]
   },
-  "include": ["src"]
 }
