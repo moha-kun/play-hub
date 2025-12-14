@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import http from 'http';
 import {Server as IOServer} from 'socket.io';
-import registerSocketHandlers from './sockets/index.js';
+import registerSocketHandlers from './sockets/tic-tac-toe-socket.js';
 
 const app = express();
 app.use(cors());

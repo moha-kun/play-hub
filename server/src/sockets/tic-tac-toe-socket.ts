@@ -1,6 +1,6 @@
 import {Server, Socket} from "socket.io";
-import type {GameState} from '../types';
-import {checkWinnerServer, createEmptyGame, isDrawServer, sanitizeGameForClient} from '../games/index.js';
+import type {GameState} from '../types/tic-tac-toe-types.js';
+import {checkWinnerServer, createEmptyGame, isDrawServer, sanitizeGameForClient} from '../games/tic-tac-toe.js';
 
 const games: Record<string, GameState> = {};
 const roomToGame: Record<string, string> = {}; // roomName -> gameId
