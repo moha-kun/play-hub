@@ -1,4 +1,4 @@
-import type {GameState, PlayerSymbol, Winner} from '../types';
+import type {GameState, PlayerSymbol, Winner} from '../types/tic-tac-toe-types.js';
 
 const WIN_COMBOS = [
   [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -11,6 +11,7 @@ export function createEmptyGame(): GameState {
     board: Array(9).fill('') as PlayerSymbol[],
     winner: null,
     turn: 'X',
+    started: false,
     players: {}
   };
 }
