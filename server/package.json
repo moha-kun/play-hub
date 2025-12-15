@@ -1,10 +1,11 @@
 {
   "name": "play-hub-server",
   "version": "1.0.0",
-  "main": "server.ts",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "tsc && node ./dist/server.js",
+    "build": "esbuild ./src/index.ts --bundle --platform=node --format=esm --outdir=dist --packages=external",
+    "start": "npm run build && node ./dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,6 +20,7 @@
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^24.10.1",
+    "esbuild": "^0.27.1",
     "typescript": "^5.9.3"
   }
 }
