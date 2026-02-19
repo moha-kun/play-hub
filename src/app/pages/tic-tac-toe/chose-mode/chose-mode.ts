@@ -1,10 +1,11 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SocketService} from '../services/socket.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-chose-mode',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './chose-mode.html',
   styleUrl: './chose-mode.scss',
 })

@@ -1,0 +1,33 @@
+{
+  "home": {
+    "welcome": "Bienvenue sur PlayHub"
+  },
+  "common": {
+    "outcome": {
+      "win": "$player a gagné !",
+      "draw": "Match nul"
+    }
+  },
+  "games": {
+    "tic_tac_toe": {
+      "name": "Morpion",
+      "description": "Jouer X contre O",
+      "modes": {
+        "single_player": {
+          "title": "Partie à un Joueur"
+        },
+        "multiplayer": {
+          "title": "Partie à deux Joueurs"
+        }
+      }
+    }
+  },
+  "placeholders": {
+    "game_id": "ID de la partie"
+  },
+  "buttons": {
+    "play_vs_ai": "Jouer contre l’IA",
+    "create2player_room": "Créer une partie à deux joueurs",
+    "join_room": "Rejoindre une partie"
+  }
+}

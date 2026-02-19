@@ -1,14 +1,34 @@
 <div class="container py-5">
-  <h1 class="text-center mb-5">🎮 Welcome to PlayHub</h1>
+  <div class="d-flex align-items-center justify-content-between mb-5">
+
+    <!-- Empty div to keep title perfectly centered -->
+    <div style="width: 40px;"></div>
+
+    <h1 class="text-center m-0 flex-grow-1">
+      🎮 {{ 'home.welcome' | translate }}
+    </h1>
+
+    <!-- Language button -->
+    <div class="d-flex align-items-center gap-2" style="width: 120px;">
+      <i class="bi bi-translate fs-5"></i>
+      <select class="form-select form-select-sm"
+              [value]="currentLang"
+              (change)="changeLanguage($event)">
+        <option value="en">EN</option>
+        <option value="fr">FR</option>
+      </select>
+    </div>
+
+  </div>
 
   <div class="row g-4">
-    @for (game of games; track game.id) {
+    @for (game of games(); track game.id) {
     <div class="col-md-4">
       <div class="card shadow-sm h-100" (click)="openGame(game)" style="cursor: pointer;">
-        <img [src]="game.image" class="card-img-top" alt="{{ game.name }}">
+        <img [src]="game.image" class="card-img-top" alt="{{ game.name | translate }}">
         <div class="card-body text-center">
-          <h5 class="card-title">{{ game.name }}</h5>
-          <p class="card-text text-muted">{{ game.description }}</p>
+          <h5 class="card-title">{{ game.name | translate }}</h5>
+          <p class="card-text text-muted">{{ game.description | translate }}</p>
         </div>
       </div>
     </div>
