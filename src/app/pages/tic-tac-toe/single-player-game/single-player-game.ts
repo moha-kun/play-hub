@@ -2,10 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {PlayerSymbol, Winner} from '../services/tic-tac-toe-service';
 import {SinglePlayerService} from '../services/single-player-service';
 import {TicTacToeBoard} from '../tic-tac-toe-board/tic-tac-toe-board';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-single-player-game',
-  imports: [TicTacToeBoard],
+  imports: [TicTacToeBoard, TranslatePipe],
   templateUrl: './single-player-game.html',
   styleUrl: './single-player-game.scss',
 })

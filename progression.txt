@@ -4,3 +4,4 @@
 - there are now two services socket-service and multiplayer-service but I have not decide which one to use
 - multiplayer-service and single-player-service implement the same interface
 - the idea of using the multiplayer-service is to use the same component for both single and multi-player, but for the moment I'm not sure what is the best practice for that
+- I started the translation module integration, now the config is done. Next step is to fill the translation files and use the translation stuff in views

@@ -1,0 +1,33 @@
+{
+  "home": {
+    "welcome": "Welcome to PlayHub"
+  },
+  "common": {
+    "outcome": {
+      "win": "$player Wins!",
+      "draw": "Draw"
+    }
+  },
+  "games": {
+    "tic_tac_toe": {
+      "name": "Tic Tac Toe",
+      "description": "Play X vs O",
+      "modes": {
+        "single_player": {
+          "title": "Single Player Game"
+        },
+        "multiplayer": {
+          "title": "Multiple Player Game"
+        }
+      }
+    }
+  },
+  "places_holder": {
+    "game_id": "Game ID"
+  },
+  "buttons": {
+    "play_vs_ai": "Single Player (vs AI)",
+    "create2player_room": "Create 2-player room",
+    "join_room": "Join Room"
+  }
+}

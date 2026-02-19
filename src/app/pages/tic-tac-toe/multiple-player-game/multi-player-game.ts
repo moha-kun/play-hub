@@ -4,10 +4,11 @@ import {PlayerSymbol, Winner} from '../services/tic-tac-toe-service';
 import {SocketService} from '../services/socket.service';
 import {ActivatedRoute} from '@angular/router';
 import {TicTacToeBoard} from '../tic-tac-toe-board/tic-tac-toe-board';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-multiple-player-game',
-  imports: [TicTacToeBoard],
+  imports: [TicTacToeBoard, TranslatePipe],
   templateUrl: './multi-player-game.html',
   styleUrl: './multi-player-game.scss',
 })
