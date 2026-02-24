@@ -5,10 +5,14 @@ import {SocketService} from '../services/socket.service';
 import {ActivatedRoute} from '@angular/router';
 import {TicTacToeBoard} from '../tic-tac-toe-board/tic-tac-toe-board';
 import {TranslatePipe} from '@ngx-translate/core';
+import {DialogService} from '../../../commons/services/dialog-service';
 
 @Component({
   selector: 'app-multiple-player-game',
-  imports: [TicTacToeBoard, TranslatePipe],
+  imports: [
+    TicTacToeBoard,
+    TranslatePipe
+  ],
   templateUrl: './multi-player-game.html',
   styleUrl: './multi-player-game.scss',
 })
@@ -20,9 +24,11 @@ export class MultiPlayerGame implements OnInit, OnDestroy {
   socketSubState?: Subscription;
   mySymbol: PlayerSymbol = '';
   isMyTurn = false;
+  isStarted: boolean = false;
 
-  constructor(private route: ActivatedRoute, private socketService: SocketService) {
+  constructor(private route: ActivatedRoute, private socketService: SocketService, private dialogService: DialogService) {
   }
+
 
   ngOnInit() {
     this.gameId = this.route.snapshot.queryParams["gameId"];
@@ -40,10 +46,11 @@ export class MultiPlayerGame implements OnInit, OnDestroy {
   private subscribeSocketEvents() {
     this.socketSubStart = this.socketService.onStartGame().subscribe((payload) => {
       // payload contains state: board, winner, turn
-      const {gameId, state} = payload;
+      const {state} = payload;
       this.board = state.board;
       this.winner = state.winner;
       this.isMyTurn = state.turn === this.mySymbol;
+      this.isStarted = state.started;
     });
 
     this.socketSubState = this.socketService.onGameState().subscribe((payload) => {
@@ -58,7 +65,15 @@ export class MultiPlayerGame implements OnInit, OnDestroy {
     if (!this.gameId || this.board[i] || this.winner || !this.isMyTurn) return;
     console.log('make move', this.gameId, i);
     this.socketService.sendMove(this.gameId, i)
-      .then(resp => this.isMyTurn = false)
+      .then(() => this.isMyTurn = false)
       .catch(error => alert(error));
+  }
+
+  leaveGame() {
+    this.dialogService.open({
+      title: 'leave game',
+      content: 'if you leave the game you will lose directly!'
+    })
+      .subscribe((resp) => console.log(resp));
   }
 }

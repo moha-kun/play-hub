@@ -34,6 +34,7 @@ export function sanitizeGameForClient(game: GameState) {
     board: game.board,
     winner: game.winner,
     turn: game.turn,
+    started: game.started,
     players: {
       X: !!game.players.X,
       O: !!game.players.O
