@@ -1,4 +1,4 @@
-<div id="confirmation_dialog" class="modal fade show d-block" tabindex="-1" (click)="closeConfirm()">
+<div id="confirmation_dialog" class="modal fade show d-block" tabindex="-1" (click)="cancel()">
   <div class="modal-dialog">
     <div class="modal-content">
 
@@ -6,7 +6,7 @@
         <h5 class="modal-title">{{ title() }}</h5>
         <button type="button"
                 class="btn-close"
-                (click)="closeConfirm()">
+                (click)="cancel()">
         </button>
       </div>
 
@@ -16,13 +16,13 @@
 
       <div class="modal-footer">
         <button class="btn btn-secondary"
-                (click)="closeConfirm()">
-          Cancel
+                (click)="cancel()">
+          {{ 'buttons.cancel' | translate }}
         </button>
 
         <button class="btn btn-danger"
-                (click)="confirmAction()">
-          Confirm
+                (click)="confirm()">
+          {{ 'buttons.confirm' | translate }}
         </button>
       </div>
 

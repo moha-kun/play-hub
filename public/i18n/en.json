@@ -28,6 +28,8 @@
   "buttons": {
     "play_vs_ai": "Single Player (vs AI)",
     "create2player_room": "Create 2-player room",
-    "join_room": "Join Room"
+    "join_room": "Join Room",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
   }
 }

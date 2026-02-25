@@ -22,10 +22,11 @@ export class DialogService {
 
     document.body.append((<EmbeddedViewRef<any>>dialog.hostView).rootNodes[0]);
 
-    dialog.instance.destroyEvent.subscribe(() => {
+    dialog.instance.onDestroy.subscribe(() => {
       this.appRef.detachView(dialog.hostView);
       dialog.destroy();
     })
-    return dialog.instance.close;
+
+    return dialog.instance.onConfirm;
   }
 }

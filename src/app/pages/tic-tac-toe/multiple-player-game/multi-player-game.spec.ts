@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { MultiPlayerGame } from './multi-player-game.component';
+import {MultiPlayerGame} from './multi-player-game';
 
 describe('MultiplePlayerGame', () => {
   let component: MultiPlayerGame;

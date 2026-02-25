@@ -1,12 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 
 import { DialogService } from './dialog-service';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('DialogService', () => {
   let service: DialogService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [
+        TranslateModule.forRoot(),
+      ]
+    });
     service = TestBed.inject(DialogService);
   });
 
