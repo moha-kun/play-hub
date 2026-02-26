@@ -1,18 +1,18 @@
-import {ApplicationRef, createComponent, EmbeddedViewRef, Injectable} from '@angular/core';
+import {ApplicationRef, createComponent, EmbeddedViewRef, EnvironmentInjector, Injectable} from '@angular/core';
 import {ConfirmationDialog} from '../components/confirmation-dialog/confirmation-dialog';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DialogService {
-  constructor(private appRef: ApplicationRef) {
+  constructor(private appRef: ApplicationRef, private injector: EnvironmentInjector) {
   }
 
-  open(options: {title: string, content: string}) {
+  open(options: {title: string, content: string}): Promise<boolean> {
     const dialog = createComponent(
       ConfirmationDialog,
       {
-        environmentInjector: this.appRef.injector
+        environmentInjector: this.injector
       });
     dialog.setInput('title', options.title);
     dialog.setInput('content', options.content);
@@ -22,11 +22,13 @@ export class DialogService {
 
     document.body.append((<EmbeddedViewRef<any>>dialog.hostView).rootNodes[0]);
 
-    dialog.instance.onDestroy.subscribe(() => {
+    const promise = dialog.instance.open();
+
+    promise.finally(() => {
       this.appRef.detachView(dialog.hostView);
       dialog.destroy();
-    })
+    });
 
-    return dialog.instance.onConfirm;
+    return promise;
   }
 }

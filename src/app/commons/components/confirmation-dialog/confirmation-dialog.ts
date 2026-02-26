@@ -1,4 +1,4 @@
-import {Component, EventEmitter, input, Output} from '@angular/core';
+import {Component, input} from '@angular/core';
 import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
@@ -12,20 +12,18 @@ import {TranslatePipe} from '@ngx-translate/core';
 export class ConfirmationDialog {
   title = input<string>();
   content = input<string>();
-  @Output()
-  onConfirm= new EventEmitter<void>();
-  onDestroy = new EventEmitter<void>();
+
+  private resolveFn!: (value: boolean) => void;
+
+  open(): Promise<boolean> {
+    return new Promise(resolve => this.resolveFn = resolve);
+  }
 
   confirm() {
-    this.onConfirm.emit();
-    this.destroy();
+    this.resolveFn(true);
   }
 
   cancel() {
-    this.destroy();
-  }
-
-  destroy() {
-    this.onDestroy.emit();
+    this.resolveFn(false);
   }
 }
