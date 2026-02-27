@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {MultiPlayerGame} from './multi-player-game';
 
-describe('MultiplePlayerGame', () => {
-  let component: MultiPlayerGame;
-  let fixture: ComponentFixture<MultiPlayerGame>;
+import { ConfirmationDialog } from './confirmation-dialog';
+
+describe('ConfirmationDialog', () => {
+  let component: ConfirmationDialog;
+  let fixture: ComponentFixture<ConfirmationDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MultiPlayerGame]
+      imports: [ConfirmationDialog]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MultiPlayerGame);
+    fixture = TestBed.createComponent(ConfirmationDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
