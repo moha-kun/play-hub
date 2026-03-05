@@ -43,6 +43,15 @@ export class SocketService {
         });
     }
 
+    withdraw(gameId: string): Promise<boolean> {
+      return new Promise((resolve) => {
+        this.socket?.emit('withdrawal', {gameId}, (resp: any) => {
+          console.log('player withdraws');
+          resolve(resp);
+        })
+      });
+  }
+
     // Observables for server events
     onStartGame(): Observable<any> {
         return new Observable(observer => {

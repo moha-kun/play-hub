@@ -41,3 +41,13 @@ export function sanitizeGameForClient(game: GameState) {
     }
   };
 }
+
+export function sanitizeGameForWithdrawal(game: GameState, winner: string) {
+  return {
+    board: game.board,
+    winner: winner,
+    turn: 'X',
+    started: true,
+    players: {}
+  }
+}

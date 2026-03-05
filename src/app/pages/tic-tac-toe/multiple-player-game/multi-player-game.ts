@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {PlayerSymbol, Winner} from '../services/tic-tac-toe-service';
 import {SocketService} from '../services/socket.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {TicTacToeBoard} from '../tic-tac-toe-board/tic-tac-toe-board';
 import {TranslatePipe} from '@ngx-translate/core';
 import {DialogService} from '../../../commons/services/dialog-service';
@@ -24,9 +24,14 @@ export class MultiPlayerGame implements OnInit, OnDestroy {
   socketSubState?: Subscription;
   mySymbol: PlayerSymbol = '';
   isMyTurn = false;
-  isStarted: boolean = false;
+  isStarted = false;
 
-  constructor(private route: ActivatedRoute, private socketService: SocketService, private dialogService: DialogService) {
+  constructor(
+    private route: ActivatedRoute,
+    private socketService: SocketService,
+    private dialogService: DialogService,
+    private router: Router
+  ) {
   }
 
 
@@ -58,6 +63,7 @@ export class MultiPlayerGame implements OnInit, OnDestroy {
       this.board = state.board;
       this.winner = state.winner;
       this.isMyTurn = state.turn === this.mySymbol && !this.winner;
+      this.isStarted = state.started;
     });
   }
 
@@ -69,11 +75,40 @@ export class MultiPlayerGame implements OnInit, OnDestroy {
       .catch(error => alert(error));
   }
 
-  leaveGame() {
-    this.dialogService.open({
-      title: 'leave game',
-      content: 'if you leave the game you will lose directly!'
-    })
-      .subscribe((resp) => console.log(resp));
+  async leaveGame() {
+    if (this.winner) {
+      await this.router.navigate(['..'], {relativeTo: this.route});
+      return;
+    }
+
+    if (!this.isStarted) {
+      const leaveConfirmation = await this.dialogService.open({
+        title: 'leave game',
+        content: 'You really want to leave the game ?'
+      });
+
+      if (leaveConfirmation) {
+        await this.router.navigate(['..'], {relativeTo: this.route});
+        return;
+      }
+    } else {
+      const leaveConfirmation = await this.dialogService.open({
+        title: 'leave game',
+        content: 'if you leave the game you will lose directly!'
+      });
+
+      if (leaveConfirmation) {
+        if (!this.gameId) return;
+        const serverResponse = await this.socketService.withdraw(this.gameId);
+        if (serverResponse) {
+          // TODO: add logic here
+          return;
+        }
+      }
+    }
+  }
+
+  replay() {
+    // TODO: Add replay game after ends functionality - Issue #16
   }
 }

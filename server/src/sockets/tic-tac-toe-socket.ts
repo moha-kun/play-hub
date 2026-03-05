@@ -1,6 +1,12 @@
 import {Server, Socket} from "socket.io";
 import type {GameState} from '../types';
-import {checkWinnerServer, createEmptyGame, isDrawServer, sanitizeGameForClient} from '../games';
+import {
+  checkWinnerServer,
+  createEmptyGame,
+  isDrawServer,
+  sanitizeGameForClient,
+  sanitizeGameForWithdrawal
+} from '../games';
 
 const games: Record<string, GameState> = {};
 const roomToGame: Record<string, string> = {}; // roomName -> gameId
@@ -41,8 +47,8 @@ export default function ticTacToeSocket(io: Server) {
 
       // add this socket as O
       game.players.O = socket.id;
-      socket.join(roomName);
       game.started = true;
+      socket.join(roomName);
 
       // Notify both players the game is starting
       io.to(roomName).emit('startGame', {
@@ -115,6 +121,23 @@ export default function ticTacToeSocket(io: Server) {
       callback({success: true});
     });
 
+    socket.on('withdrawal', (data: {gameId: string}, callback: (resp: any) => void)=> {
+      const roomName = `room-${data.gameId}`;
+      const game = games[data.gameId];
+      if (!game) {
+        return;
+      }
+
+      // the player triggered this event is the one who lose
+      const winner = socket.id === game.players.X ? 'O' : 'X';
+      io.to(roomName).emit('gameState', {
+        gameId: data.gameId,
+        state: sanitizeGameForWithdrawal(game, winner)
+      });
+
+      callback({success: true});
+    });
+
     socket.on('leaveRoom', (data: { gameId: string }) => {
       const roomName = `room-${data.gameId}`;
       socket.leave(roomName);
@@ -135,10 +158,11 @@ export default function ticTacToeSocket(io: Server) {
             else if (isO && game.players.X) game.winner = 'X';
             else game.winner = 'draw';
           }
-          io.to(roomName).emit('gameState', {
-            gameId,
-            state: sanitizeGameForClient(game)
-          });
+          // TODO: Fix the leave game state - Issue #15
+          // io.to(roomName).emit('gameState', {
+          //   gameId,
+          //   state: sanitizeGameForClient(game)
+          // });
           // Optionally delete game after some time — for simplicity we keep it
         }
       }
