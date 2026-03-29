@@ -3,6 +3,7 @@ import {PlayerSymbol, Winner} from '../services/tic-tac-toe-service';
 import {SinglePlayerService} from '../services/single-player-service';
 import {TicTacToeBoard} from '../tic-tac-toe-board/tic-tac-toe-board';
 import {TranslatePipe} from '@ngx-translate/core';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-single-player-game',
@@ -14,15 +15,23 @@ export class SinglePlayerGame implements OnInit {
   board: PlayerSymbol[] = Array(9).fill('');
   winner: Winner | null = null;
 
-  constructor(private singlePlayerService: SinglePlayerService) {
-  }
+  constructor(
+    private singlePlayerService: SinglePlayerService,
+    private router: Router,
+    private route: ActivatedRoute
+    ) {}
 
   ngOnInit() {
-    this.startSingle();
+    this.newGame();
   }
-  startSingle() {
+
+  newGame() {
     this.board = Array(9).fill('') as PlayerSymbol[];
     this.winner = null;
+  }
+
+  leaveGame() {
+    this.router.navigate(['..'], {relativeTo: this.route});
   }
 
   singleMove(i: number) {

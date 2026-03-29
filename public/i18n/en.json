@@ -4,7 +4,7 @@
   },
   "common": {
     "outcome": {
-      "win": "$player Wins!",
+      "win": "{{player}} Wins!",
       "draw": "Draw"
     }
   },
@@ -22,7 +22,7 @@
       }
     }
   },
-  "places_holder": {
+  "placeholders": {
     "game_id": "Game ID"
   },
   "buttons": {

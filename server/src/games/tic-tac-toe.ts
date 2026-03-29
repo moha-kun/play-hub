@@ -34,9 +34,20 @@ export function sanitizeGameForClient(game: GameState) {
     board: game.board,
     winner: game.winner,
     turn: game.turn,
+    started: game.started,
     players: {
       X: !!game.players.X,
       O: !!game.players.O
     }
   };
+}
+
+export function sanitizeGameForWithdrawal(game: GameState, winner: string) {
+  return {
+    board: game.board,
+    winner: winner,
+    turn: 'X',
+    started: true,
+    players: {}
+  }
 }
