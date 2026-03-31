@@ -76,35 +76,33 @@ export class MultiPlayerGame implements OnInit, OnDestroy {
   }
 
   async leaveGame() {
-    if (this.winner) {
-      await this.router.navigate(['..'], {relativeTo: this.route});
-      return;
-    }
-
+    console.log('this.isStarted', this.isStarted);
     if (!this.isStarted) {
       const leaveConfirmation = await this.dialogService.open({
         title: 'leave game',
         content: 'You really want to leave the game ?'
       });
 
-      if (leaveConfirmation) {
-        await this.router.navigate(['..'], {relativeTo: this.route});
+      if (!leaveConfirmation) {
         return;
       }
-    } else {
-      const leaveConfirmation = await this.dialogService.open({
-        title: 'leave game',
-        content: 'if you leave the game you will lose directly!'
-      });
+    }
 
-      if (leaveConfirmation) {
-        if (!this.gameId) return;
-        const serverResponse = await this.socketService.withdraw(this.gameId);
-        if (serverResponse) {
-          // TODO: add logic here
-          return;
-        }
-      }
+    await this.socketService.leaveGame(this.gameId!!);
+    await this.router.navigate(['..'], {relativeTo: this.route});
+    return;
+  }
+
+  async withdraw() {
+    const leaveConfirmation = await this.dialogService.open({
+      title: 'Withdraw',
+      content: 'if you withdraw you will lose directly!'
+    });
+
+    if (leaveConfirmation) {
+      if (!this.gameId) return;
+      // for the moment, the result of this promise is useless but i guard it for coming features
+      await this.socketService.withdraw(this.gameId);
     }
   }
 
