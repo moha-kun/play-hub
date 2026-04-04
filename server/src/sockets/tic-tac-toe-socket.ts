@@ -1,15 +1,16 @@
 import {Server, Socket} from "socket.io";
-import type {GameState} from '../types';
+import type {GameState, Winner} from '../types';
 import {
   checkWinnerServer,
   createEmptyGame,
   isDrawServer,
   sanitizeGameForClient,
+  sanitizeGameForWinner,
   sanitizeGameForWithdrawal
 } from '../games';
 
 const games: Record<string, GameState> = {};
-const roomToGame: Record<string, string> = {}; // roomName -> gameId
+const roomToPlayers: Record<string, { X?: string; O?: string }> = {}; // roomName -> gameId
 
 export default function ticTacToeSocket(io: Server) {
 
@@ -23,7 +24,7 @@ export default function ticTacToeSocket(io: Server) {
       const state = createEmptyGame();
       state.players.X = socket.id; // creator is X
       games[gameId] = state;
-      roomToGame[roomName] = gameId;
+      roomToPlayers[roomName] = {X: socket.id, O: undefined};
 
       socket.join(roomName);
       // inform creator
@@ -35,18 +36,20 @@ export default function ticTacToeSocket(io: Server) {
       const {gameId} = data;
       const roomName = `room-${gameId}`;
       const game = games[gameId];
+      const players = roomToPlayers[roomName];
       if (!game) {
         callback({error: 'Game not found'});
         return;
       }
       // if room already has O player, cannot join
-      if (game.players.O) {
+      if (game.players.O || players?.O) {
         callback({error: 'Room already full'});
         return;
       }
 
       // add this socket as O
       game.players.O = socket.id;
+      roomToPlayers[roomName]!.O = socket.id;
       game.started = true;
       socket.join(roomName);
 
@@ -121,7 +124,7 @@ export default function ticTacToeSocket(io: Server) {
       callback({success: true});
     });
 
-    socket.on('withdrawal', (data: {gameId: string}, callback: (resp: any) => void)=> {
+    socket.on('withdrawal', (data: { gameId: string }, callback: (resp: any) => void) => {
       const roomName = `room-${data.gameId}`;
       const game = games[data.gameId];
       if (!game) {
@@ -138,32 +141,34 @@ export default function ticTacToeSocket(io: Server) {
       callback({success: true});
     });
 
-    socket.on('leaveRoom', (data: { gameId: string }) => {
-      const roomName = `room-${data.gameId}`;
-      socket.leave(roomName);
-      // optional: cleanup if players leave
-    });
-
     socket.on('disconnect', () => {
       console.log('socket disconnected', socket.id);
-      // Find any game where this socket is a player -> mark winner as opponent / cleanup
-      for (const [gameId, game] of Object.entries(games)) {
-        const isX = game.players.X === socket.id;
-        const isO = game.players.O === socket.id;
-        if (isX || isO) {
-          const roomName = `room-${gameId}`;
-          // If game not finished, award win to the other player (or set cancelled)
-          if (!game.winner) {
-            if (isX && game.players.O) game.winner = 'O';
-            else if (isO && game.players.X) game.winner = 'X';
-            else game.winner = 'draw';
+      for (const [room, players] of Object.entries(roomToPlayers)) {
+        if (players.X && players.O) {
+          const isX = players.X === socket.id;
+          let winner: Winner = '';
+          if (isX) {
+            roomToPlayers[room]!.X = undefined;
+            winner = 'O';
+          } else {
+            roomToPlayers[room]!.O = undefined;
+            winner = 'X';
           }
-          // TODO: Fix the leave game state - Issue #15
-          // io.to(roomName).emit('gameState', {
-          //   gameId,
-          //   state: sanitizeGameForClient(game)
-          // });
-          // Optionally delete game after some time — for simplicity we keep it
+
+          const gameId = room.slice(5);
+          const game = games[gameId]!!;
+          games[gameId] = sanitizeGameForWinner(game, winner);
+          io.to(room).emit('gameState', {
+            gameId: gameId,
+            state: sanitizeGameForWithdrawal(game, winner)
+          });
+
+          return;
+        }
+
+        if (!players.X || !players.O) {
+          delete roomToPlayers[room];
+          console.log(`${room} deleted`);
         }
       }
     });
