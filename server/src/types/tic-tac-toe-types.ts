@@ -3,9 +3,9 @@ export type PlayerSymbol = 'X' | 'O' | '';
 export type Winner = PlayerSymbol | 'draw' | null;
 
 export interface GameState {
-  board: PlayerSymbol[]; // length 9
+  board: PlayerSymbol[];
   winner: Winner;
-  turn: PlayerSymbol; // whose turn it is: 'X' or 'O'
+  turn: PlayerSymbol;
   started: boolean;
-  players: { X?: string; O?: string }; // socket ids
+  players: { X?: string; O?: string };
 }

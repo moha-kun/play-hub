@@ -88,9 +88,8 @@ export class MultiPlayerGame implements OnInit, OnDestroy {
       }
     }
 
-    await this.socketService.leaveGame(this.gameId!!);
-    await this.router.navigate(['..'], {relativeTo: this.route});
-    return;
+    this.socketService.disconnect();
+    this.router.navigate(['..'], {relativeTo: this.route});
   }
 
   async withdraw() {

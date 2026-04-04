@@ -52,15 +52,6 @@ export class SocketService {
       });
   }
 
-  leaveGame(gameId: string): Promise<any> {
-    return new Promise((resolve) => {
-      this.socket?.emit('leaveRoom', {gameId}, (resp: any) => {
-        console.log('player leave game', gameId);
-        resolve(resp);
-      })
-    });
-  }
-
     // Observables for server events
     onStartGame(): Observable<any> {
         return new Observable(observer => {

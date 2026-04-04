@@ -1,10 +1,11 @@
 import {Server, Socket} from "socket.io";
-import type {GameState} from '../types';
+import type {GameState, Winner} from '../types';
 import {
   checkWinnerServer,
   createEmptyGame,
   isDrawServer,
   sanitizeGameForClient,
+  sanitizeGameForWinner,
   sanitizeGameForWithdrawal
 } from '../games';
 
@@ -140,32 +141,34 @@ export default function ticTacToeSocket(io: Server) {
       callback({success: true});
     });
 
-    socket.on('leaveRoom', (data: { gameId: string }, callback: (resp: any) => void) => {
-      const roomName = `room-${data.gameId}`;
-      socket.leave(roomName);
-      const game = games[data.gameId];
-      if (!game) return;
-
-      const isX = game?.players.X === socket.id;
-      if (isX) {
-        roomToPlayers[roomName]!.X = undefined;
-      } else {
-        roomToPlayers[roomName]!.O = undefined;
-      }
-
-      callback({success: true});
-    });
-
     socket.on('disconnect', () => {
       console.log('socket disconnected', socket.id);
-      console.log(roomToPlayers);
-      // Find any game where this socket is a player
       for (const [room, players] of Object.entries(roomToPlayers)) {
-        if (!players.X && !players.O) {
-          console.log('Game found!');
+        if (players.X && players.O) {
+          const isX = players.X === socket.id;
+          let winner: Winner = '';
+          if (isX) {
+            roomToPlayers[room]!.X = undefined;
+            winner = 'O';
+          } else {
+            roomToPlayers[room]!.O = undefined;
+            winner = 'X';
+          }
+
+          const gameId = room.slice(5);
+          const game = games[gameId]!!;
+          games[gameId] = sanitizeGameForWinner(game, winner);
+          io.to(room).emit('gameState', {
+            gameId: gameId,
+            state: sanitizeGameForWithdrawal(game, winner)
+          });
+
+          return;
+        }
+
+        if (!players.X || !players.O) {
           delete roomToPlayers[room];
           console.log(`${room} deleted`);
-          console.log(roomToPlayers);
         }
       }
     });
